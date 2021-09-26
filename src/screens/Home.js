@@ -24,6 +24,17 @@ const Home = ({ navigation }) => {
   }, []);
   //const deviceWidth = Dimensions.get('window').width;
 
+  //컨텐츠 유형별로 페이지 분기처리
+  const goToPage = (ctnt) => {
+
+    if(ctnt.ctnt_type == '4'){
+      //사진 포스팅
+      navigation.navigate('Posting', { data: ctnt }) ;
+    }else {
+      navigation.navigate('Detail', { data: ctnt }) ;
+    }
+  };
+
   return (
     <ScrollView styles={styles.container}>
       {/* <StatusBar styles={{ backgroundColor: 'black' }} /> */}
@@ -40,18 +51,18 @@ const Home = ({ navigation }) => {
         return (
           <TouchableOpacity
             key={index}
-            onPress={() => navigation.navigate('Detail', { data: image })}
+            onPress={() => goToPage(image) }
           >
             <View style={styles.listContainer}>
               {/* 이미지 영역 */}
               <View style={styles.listItem}>
                 <Image
-                  source={image.image1}
+                  source={image.ctnt_img_url1}
                   resizeMode={'cover'}
                   style={{ height: 180, width: width / 2 }}
                 />
                 <Image
-                  source={image.image2}
+                  source={image.ctnt_img_url2}
                   resizeMode={'cover'}
                   style={{ height: 180, width: width / 2 }}
                 />
@@ -69,16 +80,16 @@ const Home = ({ navigation }) => {
                 {/* text area */}
                 <View style={{ paddingTop: 7 }}>
                   <View style={{ flexDirection: 'row' }}>
-                    <Text style={{ fontSize: 15, flexShrink: 1 }}>{image.title}</Text>
+                    <Text style={{ fontSize: 15, flexShrink: 1 }}>{image.ctnt_tit}</Text>
                   </View>
                   <View style={{ flex: 1, flexDirection: 'row' }}>
                     <Text style={{ fontSize: 11, color: 'gray' }}>
-                      {image.writer}&nbsp;&middot;&nbsp;
+                      {image.ctnt_wrt_uid}&nbsp;&middot;&nbsp;
                     </Text>
                     <Text style={{ fontSize: 11, color: 'gray' }}>
                       {image.hits}&nbsp;&middot;&nbsp;
                     </Text>
-                    <Text style={{ fontSize: 11, color: 'gray' }}>{image.createdAt}</Text>
+                    <Text style={{ fontSize: 11, color: 'gray' }}>{image.ctnt_wrt_ymd}</Text>
                   </View>
                 </View>
               </View>

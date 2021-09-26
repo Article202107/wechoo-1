@@ -1,11 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Modal, StyleSheet, View, Dimensions} from 'react-native';
 
-const ModalComponent = ({
-    modalVisible:boolean,
-    setModalVisible: any,
-    body:any,   
-}) => {
+const ModalComponent = () => {
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [body, setBody] = useState('');
+    
     return (
        <Modal
             animationType={'slide'}
