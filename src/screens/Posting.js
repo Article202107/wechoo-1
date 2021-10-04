@@ -1,76 +1,57 @@
-import React, {useState} from 'react';
-import ModalComponent from '../common/ModalComponent';
-import { Text, View, Image, Dimensions } from 'react-native';
-import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
-import Constants from 'expo-constants';
+import React, { useState, useEffect } from 'react';
+import { Dimensions } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Swiper from 'react-native-swiper/src';
 
-const window = Dimensions.get("window");
+const Posting = ({ route, navigation }) => {
 
-class Posting extends React.Component {
-  
-  constructor(props) {
-    super(props);
-    this.state = {
-      height: 0,
-      width: 0,
-      postingData : props.route.params.data,
-      imgList : [],
-      imgIdx: 0,
-    };
-  }
+  const [height, setHeight]           = useState('');
+  const [width, setWidth]             = useState('');
+  const [postingData, setPostingData] = useState('');
+  const [imgList, setImgList]         = useState([]);
 
-  //렌더링이 모두 끝난 뒤 실행되는 함수
-  componentDidMount() {
-
-    //postingData 의 ctnt_img_url 모두 배열로 저장
+  //init
+  useEffect(() => {
+    setHeight(Dimensions.get('window').height);
+    setWidth(Dimensions.get('window').width);
+    setPostingData(route.params.data);
+    
+    //이미지 URL 만 뽑아서 배열에 insert
     const imgListArr = [];
-    Object.keys(this.state.postingData).map((entries, idx)=>{
+    Object.keys(route.params.data).map((entries, idx)=>{
       if(entries.indexOf('ctnt_img_url') > -1 ){
-        imgListArr.push(this.state.postingData[entries]);
+        imgListArr.push(route.params.data[entries]);
       }
     });
+    setImgList(imgListArr);
+  }, []);
+  
 
-    this.setState({
-      height: Dimensions.get('window').height,
-      width: Dimensions.get('window').width,
-      imgList: imgListArr,
-    });
-  }
-
-  //SWIPE 했을 때 동작 제어
-  onSwipe(gestureName, gestureState) {
-    const {SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
-    switch(gestureName){
-      case SWIPE_LEFT :   //다음 이미지
-        if(this.state.imgIdx < this.state.imgList.length-1){
-          this.setState({ imgIdx : ++this.state.imgIdx});
+  return (
+    <>
+    <SafeAreaView>
+      <Swiper 
+        showsButtons={false}
+        loop={false}
+        showsPagination={false}
+      >
+        {
+          imgList.map( (item, index) =>  
+            <div 
+              key={index}
+            >
+              <img 
+                key={index} 
+                src={item} 
+                style={{ height: height, width: width }}
+              />
+            </div>) 
         }
-        break;
-      case SWIPE_RIGHT :  //이전 이미지
-        if(this.state.imgIdx != 0){
-          this.setState({ imgIdx : --this.state.imgIdx});
-        }
-        break;
-    }
-  }
-
-  render() {
-    
-    return (
-      <View style={{ flex: 1, marginTop: Constants.statusBarHeight }}>
-        <Text>Posting</Text>
-        {/* <Text>{this.state.image}</Text> */}
-        <GestureRecognizer
-          onSwipe={(direction, state)=> this.onSwipe(direction, state)}
-        >
-          <Image 
-            source={this.state.imgList[this.state.imgIdx]} style={{ height: this.state.height , width: this.state.width }} 
-          />
-        </GestureRecognizer>  
-        
-      </View>
-    );
-  }
+      </Swiper>
+    </SafeAreaView>
+    </>
+  );
+  
 }
 
 export default Posting;
