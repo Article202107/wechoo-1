@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Dimensions, View, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper/src';
-import RBSheet from "react-native-raw-bottom-sheet";
+import BottomSheet from "react-native-gesture-bottom-sheet";
 
 const Posting = ({ route, navigation }) => {
 
@@ -11,7 +11,7 @@ const Posting = ({ route, navigation }) => {
   const [postingData, setPostingData] = useState('');
   const [imgList, setImgList]         = useState([]);
 
-  const refRBSheet = useRef();
+  const bottomSheet = useRef();
 
   //init
   useEffect(() => {
@@ -33,7 +33,7 @@ const Posting = ({ route, navigation }) => {
     <>
     <SafeAreaView>
       <View>
-        <button style={{position : 'fixed', zIndex: '1'}} onClick={() => refRBSheet.current.open()}>모달</button>
+        <button style={{position : 'fixed', zIndex: '1'}} onClick={() => bottomSheet.current.show()}>모달</button>
         
         <Swiper 
           showsButtons={false}
@@ -53,22 +53,7 @@ const Posting = ({ route, navigation }) => {
               </div>) 
           }
         </Swiper>
-        <RBSheet
-          ref={refRBSheet}
-          animationType={"fade"}
-          closeOnDragDown={true}
-          closeOnPressMask={true}
-          customStyles={{
-            wrapper: {
-              backgroundColor: "transparent"
-            },
-            draggableIcon: {
-              backgroundColor: "#000"
-            }
-          }}
-        >
-          <div>모달 부분</div>
-        </RBSheet>
+        <BottomSheet hasDraggableIcon ref={bottomSheet} height={height} />
       </View>
     </SafeAreaView>
     </>
